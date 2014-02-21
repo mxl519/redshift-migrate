@@ -1,7 +1,7 @@
 # Extend ActiveRecord migrations to handle views and their underlying tables
 module MigrationHelper
   extend ActiveSupport::Concern
-
+  
   def add_column(table_name, column_name, type, options = {})
     options[:partitioned] ||= determine_partitioned(table_name)
     if options[:partitioned]
@@ -57,8 +57,15 @@ module MigrationHelper
     execute(statement)
   end
   
+  def grant_select(table_name)
+    statement = "GRANT SELECT ON #{table_name} TO GROUP ops_group"
+    execute(statement)
+    statement = "GRANT SELECT ON #{table_name} TO GROUP data_scientist"
+    execute(statement)
+  end
+  
   protected
-  def add_column_options!(sql, options) #:nodoc:
+  def add_column_options!(sql, options)
     sql << " ENCODE #{options[:encode]}" if options[:encode]
     super(sql, options)
   end
