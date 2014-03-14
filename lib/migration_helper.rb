@@ -22,7 +22,7 @@ module MigrationHelper
   def add_view_column(view_name, column_name, type, options = {})
     partitioned = options.delete(:partitioned).try(:to_sym)
     raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly].include? partitioned
-    update_view(view_name) do
+    update_view(view_name, :partitioned => partitioned) do
       table_names = list_all_tables(view_name, partitioned)
       raise "No tables found for view #{view_name}!" if table_names.empty?
       table_names.each { |table_name| add_column(table_name, column_name, type, options) }
@@ -30,7 +30,7 @@ module MigrationHelper
   end
   
   def remove_view_column(view_name, partitioned, *column_names)
-    update_view(view_name) do
+    update_view(view_name, :partitioned => partitioned) do
       table_names = list_all_tables(view_name, partitioned)
       raise "No tables found for view #{view_name}!" if table_names.empty?
       table_names.each { |table_name| remove_column(table_name, *column_names) }
@@ -81,11 +81,11 @@ module MigrationHelper
     res.values.flatten
   end
   
-  def update_view(view_name)
+  def update_view(view_name, options = {})
     drop_view(view_name)
     yield
   ensure
-    create_view(view_name)
+    create_view(view_name, options)
   end
 
   # Monthly table partitions end in YYYYMM
