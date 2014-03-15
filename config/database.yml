@@ -10,7 +10,7 @@ development:
 production:
   adapter: redshift
   database: production
-  host: scout.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
+  host: scout-production.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
   port: 5439
   username: scout
   password: sc0utAd$
