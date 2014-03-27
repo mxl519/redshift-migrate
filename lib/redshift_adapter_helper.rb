@@ -17,6 +17,14 @@ module TableDefinitionHelper
   end
 end
 ActiveRecord::ConnectionAdapters::RedshiftAdapter::TableDefinition.send(:include, TableDefinitionHelper)
+  
+module ColumnDefinitionHelper
+  def add_column_options!(sql, options)
+    sql << " ENCODE #{options[:encode]}" if options[:encode]
+    super(sql, options)
+  end
+end
+ActiveRecord::ConnectionAdapters::RedshiftAdapter.send(:include, ColumnDefinitionHelper)
 
 class EncodedColumnDefinition < ActiveRecord::ConnectionAdapters::ColumnDefinition
   attr_accessor :encode

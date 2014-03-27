@@ -3,6 +3,9 @@ module MigrationHelper
   extend ActiveSupport::Concern
   
   def add_column(table_name, column_name, type, options = {})
+    # Lazy-load the library overwriting the RedshiftAdapter,
+    # because that gets lazy-loaded by Rails once the db connects
+    require 'redshift_adapter_helper'
     if options[:partitioned]
       add_view_column(table_name, column_name, type, options)
     else
@@ -11,7 +14,7 @@ module MigrationHelper
   end
   
   def remove_column(table_name, *column_names)
-    options = column_names.last.kind_of? Hash ? column_names.delete_at(-1) : {}
+    options = (column_names.last.kind_of? Hash) ? column_names.delete_at(-1) : {}
     if options[:partitioned]
       remove_view_column(table_name, options[:partitioned], *column_names)
     else
@@ -20,6 +23,9 @@ module MigrationHelper
   end
   
   def add_view_column(view_name, column_name, type, options = {})
+    # Lazy-load the library overwriting the RedshiftAdapter,
+    # because that gets lazy-loaded by Rails once the db connects
+    require 'redshift_adapter_helper'
     partitioned = options.delete(:partitioned).try(:to_sym)
     raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly].include? partitioned
     update_view(view_name, :partitioned => partitioned) do
@@ -60,12 +66,6 @@ module MigrationHelper
     execute(statement)
     statement = "GRANT SELECT ON #{table_name} TO GROUP data_scientist"
     execute(statement)
-  end
-  
-  protected
-  def add_column_options!(sql, options)
-    sql << " ENCODE #{options[:encode]}" if options[:encode]
-    super(sql, options)
   end
   
   private
