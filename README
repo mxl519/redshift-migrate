@@ -1,1 +1,6 @@
 Project for managing Redshift migrations
+
+1. Create your migration file with `rails generate migration MIGRATION_NAME_HERE`
+2. Test it out on sandbox (`rake db:migrate` locally will apply changes to the sandbox DB)
+3. Make a PR
+4. After the PR gets merged, run the migration on production with `rake db:migrate RAILS_ENV=production`
