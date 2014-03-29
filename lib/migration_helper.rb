@@ -26,6 +26,7 @@ module MigrationHelper
     # Lazy-load the library overwriting the RedshiftAdapter,
     # because that gets lazy-loaded by Rails once the db connects
     require 'redshift_adapter_helper'
+    options = options.dup
     partitioned = options.delete(:partitioned).try(:to_sym)
     raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly].include? partitioned
     update_view(view_name, :partitioned => partitioned) do
@@ -45,17 +46,18 @@ module MigrationHelper
   
   def create_view(view_name, options = {})
     # Hack for invertible change
-    self.connection.create_view(view_name) if self.connection.respond_to? :create_view
+    self.connection.create_view(view_name, options) if self.connection.respond_to? :create_view
     
+    options = options.dup
     partitioned = options.delete(:partitioned).try(:to_sym)
     select_statement = options[:sql] || list_all_tables(view_name, partitioned).map { |t| "SELECT * FROM #{t}\n" }.join("UNION ALL\n")
     statement = "CREATE OR REPLACE VIEW #{view_name} AS\n#{select_statement}"
     execute(statement)
   end
   
-  def drop_view(view_name)
+  def drop_view(view_name, options = {})
     # Hack for invertible change
-    self.connection.drop_view(view_name) if self.connection.respond_to? :create_view
+    self.connection.drop_view(view_name, options) if self.connection.respond_to? :create_view
     
     statement = "DROP VIEW #{view_name}"
     execute(statement)
@@ -82,7 +84,7 @@ module MigrationHelper
   end
   
   def update_view(view_name, options = {})
-    drop_view(view_name)
+    drop_view(view_name, options)
     yield
   ensure
     create_view(view_name, options)
