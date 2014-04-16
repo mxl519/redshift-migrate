@@ -1,6 +1,6 @@
 class AddExternalActivityTable < ActiveRecord::Migration
   def change
-    create_table :external_events, :options => 'SORTKEY (report_partition, timestamp)' do |t|
+    create_table :external_events, :options => 'SORTKEY (report_partition, timestamp)', :id => false do |t|
       t.string :name, :limit => 1024, :encode => :lzo
       t.string :script_version, :encode => :lzo
       t.string :client_uuid, :limit => 1024, :encode => :lzo
@@ -17,9 +17,10 @@ class AddExternalActivityTable < ActiveRecord::Migration
       t.string :extra_params, :limit => 2048, :encode => :lzo
       t.string :app_name, :limit => 1024, :encode => :lzo
       t.integer :sample_rate, :encode => :mostly16
-      t.bigint :timestamp, :encode => :delta
+      t.integer :timestamp,:limit => 8, :encode => :delta
       t.timestamp :report_partition, :encode => :runlength
       t.string :zipcode, :limit => 16, :encode => :lzo
     end
+    grant_select :external_events
  end 
 end
