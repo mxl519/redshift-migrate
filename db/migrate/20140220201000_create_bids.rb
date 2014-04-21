@@ -104,7 +104,7 @@ class CreateBids < ActiveRecord::Migration
       t.string :user_keywords, :limit => 1023, :encode => :text32k
       t.timestamp :report_partition, :encode => :runlength
       t.string :tn_primary_app_cat, :encode => :bytedict
-      t.string :tn_secondary_app_cat, :encode => :bytedict
+      t.string :tn_secondary_app_cats, :encode => :bytedict
       t.string :imp_0_api_list, :encode => :bytedict
       t.string :tn_app_id, :limit => 1024, :encode => :lzo
       t.string :gc_matched_states, :limit => 512, :encode => :lzo
