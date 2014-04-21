@@ -91,6 +91,7 @@ class CreateBids < ActiveRecord::Migration
       t.string :tn_user_id, :encode => :lzo
       t.string :user_uid, :encode => :lzo
       t.integer :user_age, :encode => :delta
+      t.column :user_gender, "CHAR(6)", :encode => :bytedict
       t.string :user_lat, :limit => 20, :encode => :runlength
       t.string :user_lon, :limit => 20, :encode => :runlength
       t.string :user_zip, :limit => 10, :encode => :text255
