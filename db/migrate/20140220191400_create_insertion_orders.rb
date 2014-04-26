@@ -27,6 +27,7 @@ class CreateInsertionOrders < ActiveRecord::Migration
       t.decimal :min_ctr_optimization, :precision => 5, :scale => 2, :encode => :runlength
       t.decimal :min_conversion_optimization, :precision => 5, :scale => 2, :encode => :runlength
       t.string :target_strategy, :encode => :runlength
+      t.boolean :even_app_impressions
     end
     grant_select :insertion_orders
   end
