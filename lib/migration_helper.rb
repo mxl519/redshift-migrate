@@ -22,6 +22,14 @@ module MigrationHelper
     end
   end
   
+  def rename_column(table_name, column_name, new_column_name, options = {})
+    if options[:partitioned]
+      rename_view_column(table_name, options[:partitioned], column_name, new_column_name)
+    else
+      super(table_name, column_name, new_column_name)
+    end
+  end
+  
   def add_view_column(view_name, column_name, type, options = {})
     # Lazy-load the library overwriting the RedshiftAdapter,
     # because that gets lazy-loaded by Rails once the db connects
@@ -41,6 +49,14 @@ module MigrationHelper
       table_names = list_all_tables(view_name, partitioned)
       raise "No tables found for view #{view_name}!" if table_names.empty?
       table_names.each { |table_name| remove_column(table_name, *column_names) }
+    end
+  end
+  
+  def rename_view_column(view_name, partitioned, column_name, new_column_name)
+    update_view(view_name, :partitioned => partitioned) do
+      table_names = list_all_tables(view_name, partitioned)
+      raise "No tables found for view #{view_name}!" if table_names.empty?
+      table_names.each { |table_name| rename_column(table_name, column_name, new_column_name) }
     end
   end
   
@@ -88,6 +104,7 @@ module MigrationHelper
     yield
   ensure
     create_view(view_name, options)
+    grant_select(view_name)
   end
 
   # Monthly table partitions end in YYYYMM
