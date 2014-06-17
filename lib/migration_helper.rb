@@ -1,13 +1,25 @@
 # Extend ActiveRecord migrations to handle views and their underlying tables
 module MigrationHelper
   extend ActiveSupport::Concern
-  
+
+  def create_table(table_name, options = {})
+    # Lazy-load the library overwriting the RedshiftAdapter,
+    # because that gets lazy-loaded by Rails once the db connects
+    require 'redshift_adapter_helper'
+    super(table_name, options) do |td|
+      yield td if block_given?
+    end
+  end
+
   def add_column(table_name, column_name, type, options = {})
     # Lazy-load the library overwriting the RedshiftAdapter,
     # because that gets lazy-loaded by Rails once the db connects
     require 'redshift_adapter_helper'
     if options[:partitioned]
+      # Add column to view
       add_view_column(table_name, column_name, type, options)
+      # Add column to prototype
+      super(prototype_name(table_name, options[:partitioned]), column_name, type, options)
     else
       super(table_name, column_name, type, options)
     end
@@ -16,7 +28,10 @@ module MigrationHelper
   def remove_column(table_name, *column_names)
     options = (column_names.last.kind_of? Hash) ? column_names.delete_at(-1) : {}
     if options[:partitioned]
+      # Remove column from view
       remove_view_column(table_name, options[:partitioned], *column_names)
+      # Remove column from prototype
+      super(prototype_name(table_name, options[:partitioned]), *column_names)
     else
       super(table_name, *column_names)
     end
@@ -24,7 +39,10 @@ module MigrationHelper
   
   def rename_column(table_name, column_name, new_column_name, options = {})
     if options[:partitioned]
+      # Rename column in view
       rename_view_column(table_name, options[:partitioned], column_name, new_column_name)
+      # Rename column in prototype
+      super(prototype_name(table_name, options[:partitioned]), column_name, new_column_name)
     else
       super(table_name, column_name, new_column_name)
     end
@@ -35,7 +53,7 @@ module MigrationHelper
     # because that gets lazy-loaded by Rails once the db connects
     require 'redshift_adapter_helper'
     options = options.dup
-    partitioned = options.delete(:partitioned).try(:to_sym)
+    partitioned = extract_partitioned_option(options)
     raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly].include? partitioned
     update_view(view_name, :partitioned => partitioned) do
       table_names = list_all_tables(view_name, partitioned)
@@ -65,7 +83,7 @@ module MigrationHelper
     self.connection.create_view(view_name, options) if self.connection.respond_to? :create_view
     
     options = options.dup
-    partitioned = options.delete(:partitioned).try(:to_sym)
+    partitioned = extract_partitioned_option(options)
     select_statement = options[:sql] || list_all_tables(view_name, partitioned).map { |t| "SELECT * FROM #{t}\n" }.join("UNION ALL\n")
     statement = "CREATE OR REPLACE VIEW #{view_name} AS\n#{select_statement}"
     execute(statement)
@@ -86,6 +104,13 @@ module MigrationHelper
     execute(statement)
   end
   
+  def create_prototype_table(table_name, options = {})
+    partitioned = extract_partitioned_option(options)
+    create_table(prototype_name(table_name, partitioned), options) do |td|
+      yield td if block_given?
+    end
+  end
+  
   private
   def create_view_over_all_tables(prefix, partitioned)
     select_all_tables = list_all_tables(prefix).map { |table| "SELECT * FROM #{table}\n" }.join("UNION ALL\n")
@@ -94,7 +119,7 @@ module MigrationHelper
   end
   
   def list_all_tables(prefix, partitioned)
-    statement = "SELECT DISTINCT(tablename) FROM pg_table_def WHERE schemaname = 'public' AND tablename LIKE '#{partition_pattern(prefix, partitioned)}'"
+    statement = "SELECT DISTINCT(tablename) FROM pg_table_def WHERE schemaname = 'public' AND tablename ~ '^#{partition_pattern(prefix, partitioned)}'"
     res = execute(statement)
     res.values.flatten
   end
@@ -112,13 +137,29 @@ module MigrationHelper
   def partition_pattern(prefix, partitioned)
     pattern = case partitioned
     when :weekly
-      Array.new(8, '_').join
+      '\\\\d{8}'
     when :monthly
-      Array.new(6, '_').join
+      '\\\\d{6}'
     else
       raise "Unrecognized option for 'partitioned': #{partitioned}"
     end
     "#{prefix}_#{pattern}"
+  end
+  
+  def prototype_name(table_name, partitioned)
+    suffix = case partitioned
+    when :weekly
+      'yyyymmdd'
+    when :monthly
+      'yyyymm'
+    else
+      raise "Unrecognized option for 'partitioned': #{partitioned}"
+    end
+    "prototype_#{table_name}_#{suffix}"
+  end
+  
+  def extract_partitioned_option(options)
+    options.delete(:partitioned).try(:to_sym)
   end
 end
 
