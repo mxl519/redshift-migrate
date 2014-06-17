@@ -2,7 +2,7 @@ require 'redshift_adapter_helper'
 
 class CreateMonthlyCreativeSummaries < ActiveRecord::Migration
   def change
-    create_table :monthly_creative_summaries_yyyymm, :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
+    create_table :monthly_creative_summaries_yyyymm, :id => false, :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :delta
       t.integer :creative_id, :encode => :runlength
       t.integer :impressions, :encode => :mostly16

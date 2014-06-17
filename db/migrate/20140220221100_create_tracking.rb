@@ -2,7 +2,7 @@ require 'redshift_adapter_helper'
 
 class CreateTracking < ActiveRecord::Migration
   def change
-    create_table :tracking, :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
+    create_table :tracking, :id => false, :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
       t.string :request_id, :encode => :lzo
       t.integer :event_time, :limit => 8, :encode => :delta
       t.string :locale, :encode => :runlength

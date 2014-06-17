@@ -2,7 +2,7 @@ require 'redshift_adapter_helper'
 
 class CreateAuctions < ActiveRecord::Migration
   def change
-    create_table :auctions_yyyymmdd, :options => 'SORTKEY (report_partition, event_time)' do |t|
+    create_table :auctions_yyyymmdd, :id => false, :options => 'SORTKEY (report_partition, event_time)' do |t|
       t.string :tn_bid_id, :encode => :lzo
       t.string :auction_id, :encode => :lzo
       t.integer :auction_type, :encode => :runlength

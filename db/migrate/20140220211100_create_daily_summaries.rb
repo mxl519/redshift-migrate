@@ -2,7 +2,7 @@ require 'redshift_adapter_helper'
 
 class CreateDailySummaries < ActiveRecord::Migration
   def change
-    create_table :daily_summaries_yyyymm, :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
+    create_table :daily_summaries_yyyymm, :id => false, :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :runlength
       t.integer :insertion_order_id, :encode => :runlength
       t.integer :campaign_id, :encode => :runlength

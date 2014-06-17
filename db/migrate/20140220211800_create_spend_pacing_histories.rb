@@ -2,7 +2,7 @@ require 'redshift_adapter_helper'
 
 class CreateSpendPacingHistories < ActiveRecord::Migration
   def change
-    create_table :spend_pacing_histories_yyyymm, :options => 'SORTKEY (report_date_in_eastern_time)' do |t|
+    create_table :spend_pacing_histories_yyyymm, :id => false, :options => 'SORTKEY (report_date_in_eastern_time)' do |t|
       t.date :report_date_in_eastern_time, :encode => :lzo
       t.integer :campaign_id, :encode => :delta32k
       t.integer :last_bid_frequency, :encode => :delta
