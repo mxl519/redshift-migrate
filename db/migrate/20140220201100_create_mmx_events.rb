@@ -2,7 +2,7 @@ require 'redshift_adapter_helper'
 
 class CreateMmxEvents < ActiveRecord::Migration
   def change
-    create_table :mmx_events_yyyymmdd, :options => 'SORTKEY (report_partition, event_time)' do |t|
+    create_table :mmx_events_yyyymmdd, :id => false, :options => 'SORTKEY (report_partition, event_time)' do |t|
       t.timestamp :report_partition, :encode => :runlength
       t.integer :event_time, :limit => 8, :encode => :delta
       t.integer :impression, :limit => 2, :encode => :runlength

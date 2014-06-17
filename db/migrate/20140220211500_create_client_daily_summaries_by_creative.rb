@@ -2,7 +2,7 @@ require 'redshift_adapter_helper'
 
 class CreateClientDailySummariesByCreative < ActiveRecord::Migration
   def change
-    create_table :client_daily_summaries_by_creative_yyyymm, :options => 'SORTKEY (insertion_order_id, report_date)' do |t|
+    create_table :client_daily_summaries_by_creative_yyyymm, :id => false, :options => 'SORTKEY (insertion_order_id, report_date)' do |t|
       t.date :report_date, :encode => :runlength
       t.integer :client_id, :encode => :runlength
       t.integer :advertiser_id, :encode => :bytedict

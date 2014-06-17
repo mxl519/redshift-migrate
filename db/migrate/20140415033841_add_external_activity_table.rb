@@ -1,6 +1,6 @@
 class AddExternalActivityTable < ActiveRecord::Migration
   def change
-    create_table :external_events, :options => 'SORTKEY (report_partition, timestamp)', :id => false do |t|
+    create_table :external_events, :id => false, :options => 'SORTKEY (report_partition, timestamp)', :id => false do |t|
       t.string :name, :limit => 1024, :encode => :lzo
       t.string :script_version, :encode => :lzo
       t.string :client_uuid, :limit => 1024, :encode => :lzo
