@@ -87,7 +87,7 @@ class NewBidsPrototypeTable < ActiveRecord::Migration
       t.integer :app_paid, :encode => :lzo
       t.integer :app_ctr_score, :limit => 2, :encode => :lzo
       t.integer :brandsafe_score, :limit => 2, :encode => :lzo
-      t.string :tn_user_id, :limit => 80, :encode => :lzo
+      t.string :tn_user_id, :limit => 90, :encode => :lzo
       t.string :user_uid, :limit => 100, :encode => :lzo
       t.integer :user_age, :encode => :delta
       t.column :user_gender, 'char(6)', :encode => :bytedict
