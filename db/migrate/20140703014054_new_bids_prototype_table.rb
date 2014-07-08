@@ -116,7 +116,7 @@ class NewBidsPrototypeTable < ActiveRecord::Migration
       t.integer :auction_type, :encode => :lzo
       t.string :imp_0_display_manager, :limit => 40, :encode => :lzo
       t.string :imp_0_display_manager_version, :limit => 50, :encode => :lzo
-      t.string :imp_0_tag_id, :limit => 255, :encode => :lzo
+      t.string :imp_0_tag_id, :limit => 40, :encode => :lzo
       t.string :a_s_tn_domain, :limit => 40, :encode => :lzo
       t.boolean :location_fetch_enabled, :encode => :runlength
       t.integer :pipeline_id, :limit => 2, :encode => :lzo
