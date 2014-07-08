@@ -122,7 +122,7 @@ class NewBidsPrototypeTable < ActiveRecord::Migration
       t.integer :pipeline_id, :limit => 2, :encode => :lzo
       t.float :location_score, :encode => :raw
       t.integer :competitors_count, :limit => 2, :encode => :lzo
-      t.string :comeptitor_ids, :limit => 512, :encode => :lzo
+      t.string :competitor_ids, :limit => 512, :encode => :lzo
     end
   end
 
