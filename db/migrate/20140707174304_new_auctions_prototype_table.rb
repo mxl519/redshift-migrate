@@ -84,7 +84,7 @@ class NewAuctionsPrototypeTable < ActiveRecord::Migration
       t.integer :device_connection_type, :limit => 2, :encode => :lzo
       t.string :imp_0_display_manager, :limit => 40, :encode => :lzo
       t.string :imp_0_display_manager_version, :limit => 50, :encode => :lzo
-      t.string :imp_0_tag_id, :limit => 255, :encode => :lzo
+      t.string :imp_0_tag_id, :limit => 40, :encode => :lzo
       t.integer :pipeline_id, :limit => 2, :encode => :lzo
       t.string :imp_0_api_list, :limit => 10, :encode => :lzo
       t.timestamp :report_partition, :encode => :lzo
