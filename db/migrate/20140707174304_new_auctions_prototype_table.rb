@@ -71,7 +71,7 @@ class NewAuctionsPrototypeTable < ActiveRecord::Migration
       t.string :user_metro, :limit => 50, :encode => :lzo
       t.string :user_city, :limit => 50, :encode => :lzo
       t.integer :user_geo_type, :encode => :lzo
-      t.boolean :do_not_track, :encode => :raw
+      t.integer :do_not_track, :limit => 2, :encode => :lzo
       t.boolean :coppa_safe, :encode => :runlength
       t.boolean :in_ipdb_geolocation, :encode => :runlength
       t.integer :location_tier, :limit => 2, :encode => :lzo
