@@ -15,7 +15,7 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
       t.integer :campaign_id, :encode => :delta32k
       t.integer :creative_id, :encode => :delta32k
       t.integer :location_id, :encode => :lzo
-      t.integer :distance, :encode => :lzo
+      t.integer :distance, :encode => :mostly16
       t.string :categories, :limit => 50, :encode => :lzo
       t.integer :bid_timestamp, :limit => 8, :encode => :lzo
       t.boolean :exploratory, :encode => :runlength
@@ -26,9 +26,9 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
       t.string :tile_id, :limit => 30, :encode => :lzo
       t.boolean :in_centroid, :encode => :runlength
       t.string :weather_condition, :limit => 15, :encode => :lzo
-      t.integer :temperature, :encode => :lzo
+      t.integer :temperature, :encode => :delta
       t.integer :uv_index, :limit => 2, :encode => :lzo
-      t.integer :tier, :limit => 2, :encode => :bytedict
+      t.integer :tier, :limit => 2, :encode => :lzo
       t.decimal :device_lat, :precision => 12, :scale => 7, :encode => :mostly32
       t.decimal :device_lon, :precision => 12, :scale => 7, :encode => :mostly32
       t.string :device_zip, :limit => 10, :encode => :lzo
@@ -115,7 +115,7 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
       t.integer :auction_type, :limit => 2, :encode => :lzo
       t.string :imp_0_display_manager, :limit => 40, :encode => :lzo
       t.string :imp_0_display_manager_version, :limit => 50, :encode => :lzo
-      t.string :imp_0_tag_id, :limit => 255, :encode => :lzo
+      t.string :imp_0_tag_id, :limit => 40, :encode => :lzo
       t.string :a_s_tn_domain, :limit => 40, :encode => :lzo
       t.boolean :location_fetch_enabled, :encode => :raw
       t.integer :pipeline_id, :limit => 2, :encode => :lzo
