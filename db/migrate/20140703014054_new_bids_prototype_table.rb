@@ -15,7 +15,7 @@ class NewBidsPrototypeTable < ActiveRecord::Migration
       t.integer :campaign_id, :encode => :delta32k
       t.integer :creative_id, :encode => :delta32k
       t.integer :location_id, :encode => :lzo
-      t.integer :distance, :encode => :lzo
+      t.integer :distance, :encode => :mostly16
       t.string :categories, :limit => 50, :encode => :lzo
       t.integer :bid_timestamp, :limit => 8, :encode => :lzo
       t.boolean :exploratory, :encode => :runlength
@@ -27,7 +27,7 @@ class NewBidsPrototypeTable < ActiveRecord::Migration
       t.string :tile_id, :limit => 30, :encode => :lzo
       t.boolean :in_centroid, :encode => :runlength
       t.string :weather_condition, :limit => 15, :encode => :lzo
-      t.integer :temperature, :encode => :lzo
+      t.integer :temperature, :encode => :delta
       t.integer :uv_index, :limit => 2, :encode => :lzo
       t.integer :tier, :limit => 2, :encode => :lzo
       t.decimal :device_lat, :precision => 12, :scale => 7, :encode => :mostly32
@@ -47,7 +47,7 @@ class NewBidsPrototypeTable < ActiveRecord::Migration
       t.string :device_type, :limit => 25, :encode => :lzo
       t.string :device_ua, :limit => 165, :encode => :lzo
       t.integer :device_cat, :encode => :lzo
-      t.string :device_make, :limit => 70, :encode => :text255
+      t.string :device_make, :limit => 70, :encode => :lzo
       t.string :device_model, :limit => 80, :encode => :lzo
       t.string :device_os, :limit => 30, :encode => :lzo
       t.string :device_osv, :limit => 40, :encode => :lzo
@@ -73,7 +73,7 @@ class NewBidsPrototypeTable < ActiveRecord::Migration
       t.string :device_dmacmd5, :limit => 45, :encode => :lzo
       t.integer :device_connectiontype, :encode => :delta
       t.string :device_language, :limit => 50, :encode => :lzo
-      t.boolean :do_not_track, :encode => :raw
+      t.boolean :do_not_track, :encode => :runlength
       t.integer :geo_type, :limit => 2, :encode => :lzo
       t.boolean :is_app, :encode => :runlength
       t.string :a_s_id, :limit => 80, :encode => :lzo

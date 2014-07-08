@@ -40,7 +40,7 @@ class NewAuctionsPrototypeTable < ActiveRecord::Migration
       t.string :device_region, :limit => 10, :encode => :lzo
       t.string :device_regionfips104, :limit => 20, :encode => :lzo
       t.column :device_metro, 'char(3)', :encode => :bytedict
-      t.string :device_make, :limit => 70, :encode => :text255
+      t.string :device_make, :limit => 70, :encode => :lzo
       t.string :device_model, :limit => 80, :encode => :lzo
       t.string :device_os, :limit => 30, :encode => :lzo
       t.string :device_osv, :limit => 40, :encode => :lzo
@@ -71,7 +71,7 @@ class NewAuctionsPrototypeTable < ActiveRecord::Migration
       t.string :user_metro, :limit => 50, :encode => :lzo
       t.string :user_city, :limit => 50, :encode => :lzo
       t.integer :user_geo_type, :encode => :lzo
-      t.integer :do_not_track, :limit => 2, :encode => :lzo
+      t.integer :do_not_track, :limit => 2, :encode => :runlength
       t.boolean :coppa_safe, :encode => :runlength
       t.boolean :in_ipdb_geolocation, :encode => :runlength
       t.integer :location_tier, :limit => 2, :encode => :lzo
