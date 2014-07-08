@@ -36,7 +36,7 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
       t.integer :bid_frequency, :limit => 2, :encode => :lzo
       t.string :imp_0_impid, :limit => 40, :encode => :lzo
       t.string :imp_0_size, :limit => 15, :encode => :lzo
-      t.integer :imp_0_pos, :limit => 2, :encode => :lzo
+      t.integer :imp_0_pos, :encode => :lzo
       t.decimal :imp_0_bidfloor, :precision => 10, :scale => 7, :encode => :bytedict
       t.integer :imp_0_instl, :limit => 2, :encode => :lzo
       t.string :imp_0_btype, :limit => 10, :encode => :lzo
@@ -45,7 +45,7 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
       t.string :device_carrier, :limit => 25, :encode => :lzo
       t.string :device_type, :limit => 25, :encode => :lzo
       t.string :device_ua, :limit => 165, :encode => :lzo
-      t.integer :device_cat, :limit => 2, :encode => :lzo
+      t.integer :device_cat, :encode => :lzo
       t.string :device_make, :limit => 70, :encode => :lzo
       t.string :device_model, :limit => 80, :encode => :lzo
       t.string :device_os, :limit => 30, :encode => :lzo
@@ -83,7 +83,7 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
       t.string :a_s_page, :limit => 512, :encode => :lzo
       t.string :a_s_topcat, :limit => 50, :encode => :lzo
       t.string :a_s_keywords, :limit => 255, :encode => :lzo
-      t.integer :app_paid, :limit => 2, :encode => :lzo
+      t.integer :app_paid, :encode => :lzo
       t.integer :app_ctr_score, :limit => 2, :encode => :lzo
       t.integer :brandsafe_score, :limit => 2, :encode => :lzo
       t.string :tn_user_id, :limit => 90, :encode => :lzo
@@ -112,7 +112,7 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
       t.string :a_s_store_url, :limit => 100, :encode => :lzo
       t.string :a_s_version, :limit => 50, :encode => :lzo
       t.string :a_s_bundle, :limit => 30, :encode => :lzo
-      t.integer :auction_type, :limit => 2, :encode => :lzo
+      t.integer :auction_type, :encode => :lzo
       t.string :imp_0_display_manager, :limit => 40, :encode => :lzo
       t.string :imp_0_display_manager_version, :limit => 50, :encode => :lzo
       t.string :imp_0_tag_id, :limit => 40, :encode => :lzo
