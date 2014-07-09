@@ -10,7 +10,7 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
       t.string :tn_bid_id, :limit => 40, :encode => :lzo
       t.integer :client_id, :encode => :bytedict
       t.integer :advertiser_id, :encode => :bytedict
-      t.integer :contract_id, :encode => :bytedict
+      t.integer :contract_id, :encode => :delta32k
       t.integer :insertion_order_id, :encode => :delta32k
       t.integer :campaign_id, :encode => :delta32k
       t.integer :creative_id, :encode => :delta32k
@@ -117,7 +117,7 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
       t.string :imp_0_display_manager_version, :limit => 50, :encode => :lzo
       t.string :imp_0_tag_id, :limit => 40, :encode => :lzo
       t.string :a_s_tn_domain, :limit => 40, :encode => :lzo
-      t.boolean :location_fetch_enabled, :encode => :raw
+      t.boolean :location_fetch_enabled, :encode => :runlength
       t.integer :pipeline_id, :limit => 2, :encode => :lzo
       t.float :location_score, :encode => :raw
     end
