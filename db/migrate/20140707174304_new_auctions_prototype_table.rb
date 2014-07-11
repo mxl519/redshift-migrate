@@ -19,7 +19,7 @@ class NewAuctionsPrototypeTable < ActiveRecord::Migration
       t.string :imp_0_mime_type_list, :limit => 90, :encode => :lzo
       t.string :imp_0_expand_dir, :limit => 30, :encode => :lzo
       t.integer :imp_0_api, :limit => 2, :encode => :lzo
-      t.boolean :is_app, :encode => :runlength
+      t.integer :is_app, :limit => 2, :encode => :lzo
       t.string :a_s_id, :limit => 80, :encode => :lzo
       t.string :a_s_name, :limit => 50, :encode => :lzo
       t.string :a_s_pid, :limit => 70, :encode => :lzo
