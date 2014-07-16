@@ -1,13 +1,13 @@
 class AppProfileNewTable < ActiveRecord::Migration
   def change
-    create_table :app_profiles_new, :options => 'SORTKEY (id)' do |t|
+    create_table :app_profile_news, :options => 'SORTKEY (id)' do |t|
       t.string :exchange, :limit => 25, :encode => :text255
       t.string :a_s_id, :limit => 80, :encode => :lzo
       t.boolean :is_app, :encode => :raw
       t.string :tn_app_id, :limit => 100, :encode => :lzo
       t.string :a_s_name, :limit => 50, :encode => :lzo
       t.string :tn_primary_category, :limit => 30, :encode => :lzo
-      t.string :tn_secondary_category, :limit => 65, :encode => :lzo
+      t.string :tn_secondary_categories, :limit => 65, :encode => :lzo
       t.timestamp :updated_at, :null => false
       t.integer :brand_safe_tier, :encode => :mostly16
       t.string :daily_impressions, :limit => 255, :encode => :text32k, :null => false
