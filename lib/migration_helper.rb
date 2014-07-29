@@ -84,9 +84,8 @@ module MigrationHelper
     
     options = options.dup
     partitioned = extract_partitioned_option(options)
-    select_statement = options[:sql] || list_all_tables(view_name, partitioned).map { |t| "SELECT * FROM #{t}\n" }.join("UNION ALL\n")
-    statement = "CREATE OR REPLACE VIEW #{view_name} AS\n#{select_statement}"
-    execute(statement)
+    
+    create_view_over_recent_tables(view_name, partitioned)
   end
   
   def drop_view(view_name, options = {})
@@ -112,10 +111,20 @@ module MigrationHelper
   end
   
   private
-  def create_view_over_all_tables(prefix, partitioned)
-    select_all_tables = list_all_tables(prefix).map { |table| "SELECT * FROM #{table}\n" }.join("UNION ALL\n")
-    statement = "CREATE OR REPLACE VIEW #{prefix} AS\n#{select_all_tables}"
-    exec_statement(statement)
+  def create_view_over_recent_tables(prefix, partitioned)
+    time = Time.current
+    case partitioned
+    when :weekly
+      current_table = weekly_table_name(prefix, time)
+      previous_table = weekly_table_name(prefix, time - 1.week)
+    when :monthly
+      current_table = monthly_table_name(prefix, time)
+      previous_table = monthly_table_name(prefix, time - 1.month)
+    else
+      return
+    end
+    statement = "CREATE OR REPLACE VIEW #{prefix} AS SELECT * FROM #{previous_table} UNION ALL SELECT * FROM #{current_table}"
+    execute(statement)
   end
   
   def list_all_tables(prefix, partitioned)
@@ -160,6 +169,14 @@ module MigrationHelper
   
   def extract_partitioned_option(options)
     options.delete(:partitioned).try(:to_sym)
+  end
+  
+  def monthly_table_name(prefix, month)
+    "#{prefix}_#{month.strftime('%Y%m')}"
+  end
+  
+  def weekly_table_name(prefix, week)
+    "#{prefix}_#{week.beginning_of_week(:sunday).strftime('%Y%m%d')}"
   end
 end
 
