@@ -19,6 +19,7 @@ class CreateExternalEventsPrototypeTable < ActiveRecord::Migration
       t.integer :sample_rate, :encode => :mostly16
       t.integer :timestamp, :limit => 8, :encode => :delta
       t.timestamp :report_partition, :encode => :runlength
+      t.string :zipcode, :limit => 16, :encode => :lzo
       t.string :carrier, :limit => 512, :encode => :lzo
       t.string :location_target_id, :limit => 1024, :encode => :lzo
       t.string :geo_type, :limit => 256, :encode => :lzo
