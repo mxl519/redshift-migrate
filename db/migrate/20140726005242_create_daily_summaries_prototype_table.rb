@@ -1,7 +1,7 @@
 class CreateDailySummariesPrototypeTable < ActiveRecord::Migration
   def up
     drop_table :prototype_daily_summaries_yyyymm
-    create_prototype_table :daily_summaries, :id => :false, :partitioned => :monthly, :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
+    create_prototype_table :daily_summaries, :id => false, :partitioned => :monthly, :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :lzo
       t.integer :insertion_order_id, :encode => :lzo
       t.integer :campaign_id, :encode => :lzo
