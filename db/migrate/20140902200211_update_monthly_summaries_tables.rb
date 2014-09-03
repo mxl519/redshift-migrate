@@ -4,7 +4,7 @@ class UpdateMonthlySummariesTables < ActiveRecord::Migration
     create_prototype_table :monthly_location_summaries, :id => false, :partitioned => :monthly,
           :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :lzo
-      t.integer :location_name, :encode => :lzo
+      t.string :location_name, :limit => 255, :encode => :lzo
       t.integer :impressions, :encode => :delta
       t.integer :clicks, :encode => :delta
       t.float :ctr, :encode => :bytedict
@@ -22,7 +22,7 @@ class UpdateMonthlySummariesTables < ActiveRecord::Migration
     create_prototype_table :monthly_creative_summaries, :id => false, :partitioned => :monthly,
       :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :lzo
-      t.integer :creative_name, :encode => :lzo
+      t.string :creative_name, :limit => 255, :encode => :lzo
       t.integer :impressions, :encode => :mostly16
       t.integer :clicks, :encode => :mostly16
       t.float :ctr, :encode => :bytedict
