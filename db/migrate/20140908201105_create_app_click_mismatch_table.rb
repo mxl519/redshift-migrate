@@ -1,6 +1,6 @@
 class CreateAppClickMismatchTable < ActiveRecord::Migration
   def change
-    create_table :app_click_mismatches, :id => :false, :options => 'SORTKEY (report_partition)' do |t|
+    create_table :app_click_mismatches, :id => :false, :options => 'SORTKEY (report_date)' do |t|
       t.timestamp :report_date, :encode => :lzo
       t.string :a_s_name, :limit => 50, :encode => :lzo
       t.string :tn_app_id, :limit => 100, :encode => :lzo
