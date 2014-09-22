@@ -29,7 +29,7 @@ class CreateEventsTable < ActiveRecord::Migration
       t.string :s4a_coordinates, :limit => 50, :encode => :lzo
       t.integer :time_on_site, :encode => :lzo
       t.string :tracking_action, :limit => 50, :encode => :lzo
-      t.integer :tracking_accuracy, :limit => 8, :encode => :lzo
+      t.float :tracking_accuracy, :encode => :raw
       t.integer :count_for_attribution, :limit => 2, :encode => :runlength
     end
   end

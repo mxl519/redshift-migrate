@@ -100,15 +100,8 @@ class CreateBidsRawTable < ActiveRecord::Migration
       t.string :user_city, :limit => 50, :encode => :lzo
       t.integer :user_geo_type, :encode => :lzo
       t.string :user_keywords, :limit => 255, :encode => :lzo
-      t.timestamp :report_partition, :encode => :lzo
       t.string :tn_primary_app_cat, :limit => 30, :encode => :lzo
       t.string :tn_secondary_app_cats, :limit => 65, :encode => :lzo
-      t.string :imp_0_api_list, :limit => 10, :encode => :lzo
-      t.string :tn_app_id, :limit => 100, :encode => :lzo
-      t.string :gc_matched_states, :limit => 512, :encode => :lzo
-      t.string :gc_matched_dmas, :limit => 512, :encode => :lzo
-      t.string :gc_profile_states, :limit => 512, :encode => :lzo
-      t.string :gc_profile_dmas, :limit => 512, :encode => :lzo
       t.string :a_s_store_url, :limit => 100, :encode => :lzo
       t.string :a_s_version, :limit => 50, :encode => :lzo
       t.string :a_s_bundle, :limit => 30, :encode => :lzo
@@ -116,6 +109,14 @@ class CreateBidsRawTable < ActiveRecord::Migration
       t.string :imp_0_display_manager, :limit => 40, :encode => :lzo
       t.string :imp_0_display_manager_version, :limit => 50, :encode => :lzo
       t.string :imp_0_tag_id, :limit => 40, :encode => :lzo
+      t.string :imp_0_api_list, :limit => 10, :encode => :lzo
+      t.string :tn_app_id, :limit => 100, :encode => :lzo
+      t.string :gc_matched_states, :limit => 512, :encode => :lzo
+      t.string :gc_matched_dmas, :limit => 512, :encode => :lzo
+      t.string :gc_profile_states, :limit => 512, :encode => :lzo
+      t.string :gc_profile_dmas, :limit => 512, :encode => :lzo
+      t.integer :mraid_version, :limit => 2, :encode => :lzo
+      t.string :user_household_income, :limit => 12, :encode => :lzo
       t.string :a_s_tn_domain, :limit => 40, :encode => :lzo
       t.boolean :location_fetch_enabled, :encode => :runlength
       t.integer :pipeline_id, :limit => 2, :encode => :lzo
@@ -124,5 +125,4 @@ class CreateBidsRawTable < ActiveRecord::Migration
       t.string :competitor_ids, :limit => 512, :encode => :lzo
     end
   end
-
 end
