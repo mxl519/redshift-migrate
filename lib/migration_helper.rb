@@ -54,7 +54,7 @@ module MigrationHelper
     require 'redshift_adapter_helper'
     options = options.dup
     partitioned = extract_partitioned_option(options)
-    raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly, :daily, :hourly].include? partitioned
+    raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly, :hourly].include? partitioned
     update_view(view_name, :partitioned => partitioned) do
       table_names = list_all_tables(view_name, partitioned)
       raise "No tables found for view #{view_name}!" if table_names.empty?
@@ -114,12 +114,6 @@ module MigrationHelper
   def create_view_over_recent_tables(prefix, partitioned)
     time = Time.current
     case partitioned
-    when :hourly
-      current_table = hourly_table_name(prefix, time)
-      previous_table = hourly_table_name(prefix, time - 1.hour)
-    when :daily
-      current_table = daily_table_name(prefix, time)
-      previous_table = daily_table_name(prefix, time - 1.day)
     when :weekly
       current_table = weekly_table_name(prefix, time)
       previous_table = weekly_table_name(prefix, time - 1.week)
@@ -140,11 +134,17 @@ module MigrationHelper
   end
   
   def update_view(view_name, options = {})
-    drop_view(view_name, options)
-    yield
-  ensure
-    create_view(view_name, options)
-    grant_select(view_name)
+    if options[:partitioned] == :hourly
+      yield
+    else
+      begin
+        drop_view(view_name, options)
+        yield
+      ensure
+        create_view(view_name, options)
+        grant_select(view_name)
+      end
+    end
   end
 
   # Monthly table partitions end in YYYYMM
@@ -153,7 +153,7 @@ module MigrationHelper
     pattern = case partitioned
     when :hourly
       '\\\\d{10}'
-    when :daily, :weekly
+    when :weekly
       '\\\\d{8}'
     when :monthly
       '\\\\d{6}'
@@ -167,7 +167,7 @@ module MigrationHelper
     suffix = case partitioned
     when :hourly
       'yyyymmddhh'
-    when :daily, :weekly
+    when :weekly
       'yyyymmdd'
     when :monthly
       'yyyymm'
@@ -187,14 +187,6 @@ module MigrationHelper
   
   def weekly_table_name(prefix, week)
     "#{prefix}_#{week.beginning_of_week(:sunday).strftime('%Y%m%d')}"
-  end
-
-  def daily_table_name(prefix, day)
-    "#{prefix}_#{day.strftime('%Y%m%d')}"
-  end
-
-  def hourly_table_name(prefix, hour)
-    "#{prefix}_#{hour.strftime('%Y%m%d%h')}"
   end
 end
 
