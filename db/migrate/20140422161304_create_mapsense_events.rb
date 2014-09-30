@@ -2,6 +2,12 @@ require 'redshift_adapter_helper'
 
 class CreateMapsenseEvents < ActiveRecord::Migration
   def change
+    # This migration was for an older system of managing partitioned tables
+    # and is no longer compatible with the current partition helpers
+  end
+
+  private
+  def original_change
     create_table :mapsense_events_yyyymmdd, :id => false, :options => 'SORTKEY (report_partition, event_time)' do |t|
       t.timestamp :report_partition, :encode => :runlength
       t.integer :event_time, :limit => 8, :encode => :delta

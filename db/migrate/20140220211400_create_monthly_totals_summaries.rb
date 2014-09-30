@@ -2,6 +2,12 @@ require 'redshift_adapter_helper'
 
 class CreateMonthlyTotalsSummaries < ActiveRecord::Migration
   def change
+    # This migration was for an older system of managing partitioned tables
+    # and is no longer compatible with the current partition helpers
+  end
+
+  private
+  def original_change
     create_table :monthly_totals_summaries_yyyymm, :id => false, :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :delta
       t.integer :impressions, :encode => :mostly16
