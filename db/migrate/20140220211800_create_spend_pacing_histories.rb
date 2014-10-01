@@ -2,6 +2,12 @@ require 'redshift_adapter_helper'
 
 class CreateSpendPacingHistories < ActiveRecord::Migration
   def change
+    # This migration was for an older system of managing partitioned tables
+    # and is no longer compatible with the current partition helpers
+  end
+
+  private
+  def original_change
     create_table :spend_pacing_histories_yyyymm, :id => false, :options => 'SORTKEY (report_date_in_eastern_time)' do |t|
       t.date :report_date_in_eastern_time, :encode => :lzo
       t.integer :campaign_id, :encode => :delta32k

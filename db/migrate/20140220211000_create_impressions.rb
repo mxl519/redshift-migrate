@@ -2,6 +2,12 @@ require 'redshift_adapter_helper'
 
 class CreateImpressions < ActiveRecord::Migration
   def change
+    # This migration was for an older system of managing partitioned tables
+    # and is no longer compatible with the current partition helpers
+  end
+
+  private
+  def original_change
     create_table :impressions_yyyymm, :id => false, :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
       t.string :request_id, :encode => :lzo
       t.integer :event_time, :limit => 8, :encode => :delta

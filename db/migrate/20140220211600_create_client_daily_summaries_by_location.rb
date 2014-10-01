@@ -2,6 +2,12 @@ require 'redshift_adapter_helper'
 
 class CreateClientDailySummariesByLocation < ActiveRecord::Migration
   def change
+    # This migration was for an older system of managing partitioned tables
+    # and is no longer compatible with the current partition helpers
+  end
+
+  private
+  def original_change
     create_table :client_daily_summaries_by_location_yyyymm, :id => false, :options => 'SORTKEY (insertion_order_id, report_date)' do |t|
       t.date :report_date, :encode => :runlength
       t.integer :client_id, :encode => :runlength

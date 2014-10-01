@@ -1,9 +1,14 @@
 class RemoveAllConversions < ActiveRecord::Migration
-  def up
+  def change
+    # This migration dropped a production table that was never created by migrations
+  end
+
+  private
+  def original_up
     drop_table :all_conversions
   end
 
-  def down
+  def original_down
     create_table :all_conversions, :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
       t.string :request_id, :encode => :lzo
       t.integer :event_time, :limit => 8, :encode => :delta

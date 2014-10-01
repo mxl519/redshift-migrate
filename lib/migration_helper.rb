@@ -57,7 +57,6 @@ module MigrationHelper
     raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly, :hourly].include? partitioned
     update_view(view_name, :partitioned => partitioned) do
       table_names = list_all_tables(view_name, partitioned)
-      raise "No tables found for view #{view_name}!" if table_names.empty?
       table_names.each { |table_name| add_column(table_name, column_name, type, options) }
     end
   end
@@ -65,7 +64,6 @@ module MigrationHelper
   def remove_view_column(view_name, partitioned, *column_names)
     update_view(view_name, :partitioned => partitioned) do
       table_names = list_all_tables(view_name, partitioned)
-      raise "No tables found for view #{view_name}!" if table_names.empty?
       table_names.each { |table_name| remove_column(table_name, *column_names) }
     end
   end
@@ -73,7 +71,6 @@ module MigrationHelper
   def rename_view_column(view_name, partitioned, column_name, new_column_name)
     update_view(view_name, :partitioned => partitioned) do
       table_names = list_all_tables(view_name, partitioned)
-      raise "No tables found for view #{view_name}!" if table_names.empty?
       table_names.each { |table_name| rename_column(table_name, column_name, new_column_name) }
     end
   end
@@ -91,7 +88,8 @@ module MigrationHelper
   def drop_view(view_name, options = {})
     # Hack for invertible change
     self.connection.drop_view(view_name, options) if self.connection.respond_to? :create_view
-    
+
+    return unless self.connection.table_exists?(view_name)
     statement = "DROP VIEW #{view_name}"
     execute(statement)
   end
@@ -113,6 +111,7 @@ module MigrationHelper
   private
   def create_view_over_recent_tables(prefix, partitioned)
     time = Time.current
+
     case partitioned
     when :weekly
       current_table = weekly_table_name(prefix, time)
@@ -123,8 +122,16 @@ module MigrationHelper
     else
       return
     end
-    statement = "CREATE OR REPLACE VIEW #{prefix} AS SELECT * FROM #{previous_table} UNION ALL SELECT * FROM #{current_table}"
+
+    view_tables = []
+    view_tables << current_table if self.connection.table_exists?(current_table)
+    view_tables << previous_table if self.connection.table_exists?(previous_table)
+
+    return unless view_tables.any?
+
+    statement = "CREATE OR REPLACE VIEW #{prefix} AS " + view_tables.map{ |table| "SELECT * FROM #{table}" }.join(' UNION ALL ')
     execute(statement)
+    grant_select(prefix)
   end
   
   def list_all_tables(prefix, partitioned)
@@ -142,7 +149,6 @@ module MigrationHelper
         yield
       ensure
         create_view(view_name, options)
-        grant_select(view_name)
       end
     end
   end
