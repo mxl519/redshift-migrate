@@ -13,10 +13,10 @@ class CreatePrototypeClientDailySummaries < ActiveRecord::Migration
       t.integer :impressions, :encode => :mostly8
       t.integer :clicks, :encode => :mostly8
       t.decimal :spend_in_dollars, :precision => 7, :scale => 2, :encode => :mostly16
-      t.integer :conversions, :integer, :encode => :mostly8
-      t.integer :drives, :integer, :encode => :mostly8
-      t.integer :calls, :integer, :encode => :mostly8
-      t.integer :urls, :integer, :encode => :mostly8
+      t.integer :conversions, :encode => :mostly8
+      t.integer :drives, :encode => :mostly8
+      t.integer :calls, :encode => :mostly8
+      t.integer :urls, :encode => :mostly8
     end
   end
 end

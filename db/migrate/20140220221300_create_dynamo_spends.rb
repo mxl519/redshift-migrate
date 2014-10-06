@@ -6,7 +6,7 @@ class CreateDynamoSpends < ActiveRecord::Migration
       t.date :d, :null => false, :encode => :runlength
       t.integer :o, :null => false, :encode => :delta
       t.integer :imps, :encode => :mostly16
-      t.integer :spend
+      t.integer :spend, :limit => 8
       t.integer :clicks, :encode => :mostly16
     end
     grant_select :dynamo_spends

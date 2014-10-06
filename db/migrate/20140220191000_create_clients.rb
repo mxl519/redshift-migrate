@@ -2,7 +2,8 @@ require 'redshift_adapter_helper'
 
 class CreateClients < ActiveRecord::Migration
   def change
-    create_table :clients, :options => 'SORTKEY (id)' do |t|
+    create_table :clients, :id => false, :options => 'SORTKEY (id)' do |t|
+      t.integer :id, :null => false, :encode => :delta
       t.timestamp :updated_at, :null => false
       t.string :name, :encode => :lzo
       t.string :bucket_name, :limit => 50, :encode => :runlength

@@ -2,7 +2,8 @@ require 'redshift_adapter_helper'
 
 class CreateInsertionOrders < ActiveRecord::Migration
   def change
-    create_table :insertion_orders, :options => 'SORTKEY (id)' do |t|
+    create_table :insertion_orders, :id => false, :options => 'SORTKEY (id)' do |t|
+      t.integer :id, :null => false, :encode => :delta
       t.timestamp :updated_at, :null => false
       t.references :contract, :encode => :delta
       t.string :name, :encode => :lzo
@@ -27,6 +28,7 @@ class CreateInsertionOrders < ActiveRecord::Migration
       t.decimal :min_ctr_optimization, :precision => 5, :scale => 2, :encode => :runlength
       t.decimal :min_conversion_optimization, :precision => 5, :scale => 2, :encode => :runlength
       t.string :target_strategy, :encode => :runlength
+      t.boolean :even_app_impressions, :encode => :runlength
     end
     grant_select :insertion_orders
   end
