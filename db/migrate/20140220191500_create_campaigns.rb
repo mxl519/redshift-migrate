@@ -2,7 +2,8 @@ require 'redshift_adapter_helper'
 
 class CreateCampaigns < ActiveRecord::Migration
   def change
-    create_table :campaigns, :options => 'SORTKEY (id)' do |t|
+    create_table :campaigns, :id => false, :options => 'SORTKEY (id)' do |t|
+      t.integer :id, :null => false, :encode => :delta
       t.timestamp :updated_at, :null => false
       t.references :insertion_order, :encode => :delta
       t.string :name, :encode => :lzo

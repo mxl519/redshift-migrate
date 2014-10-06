@@ -2,11 +2,12 @@ require 'redshift_adapter_helper'
 
 class CreateContracts < ActiveRecord::Migration
   def change
-    create_table :contracts, :options => 'SORTKEY (id)' do |t|
+    create_table :contracts, :id => false, :options => 'SORTKEY (id)' do |t|
+      t.integer :id, :null => false, :encode => :delta
       t.timestamp :updated_at, :null => false
       t.references :advertiser, :encode => :delta
       t.string :name, :encode => :lzo
-      t.string :bid_type, :limit => 3, :encode => :runlength
+      t.column :bid_type, 'char(3)', :encode => :runlength
       t.integer :contract_cpm, :encode => :bytedict
       t.integer :contract_cpc, :encode => :runlength
       t.string :domain, :encode => :text255
