@@ -16,3 +16,6 @@
 
 #ignore intellij
 .idea
+*.iml
+
+.DS_Store
