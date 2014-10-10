@@ -1,17 +1,44 @@
-development:
+sandbox_engineering:
   adapter: redshift
-  database: dev
+  database: engineering
   host: mxl.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
   port: 5439
   username: mxl
   password: sc0utAd$
   pool: 2
 
-production:
+production_engineering:
   adapter: redshift
   database: production
   host: thinknear-production-2014-06.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
   port: 5439
   username: scout
+  password: sc0utAd$
+  pool: 2
+
+sandbox_ops:
+  adapter: redshift
+  database: ops
+  host: mxl.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
+  port: 5439
+  username: mxl
+  password: sc0utAd$
+  pool: 2
+
+production_ops:
+  adapter: redshift
+  database: production
+  host: thinknear-ops-2014-09.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
+  port: 5439
+  username: scout
+  password: sc0utAd$
+  pool: 2
+
+development:
+  adapter: redshift
+  database: dev
+  host: mxl.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
+  port: 5439
+  username: mxl
   password: sc0utAd$
   pool: 2
