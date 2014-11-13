@@ -1,6 +1,6 @@
 class NewBidsPrototypeTable < ActiveRecord::Migration
   def up
-    drop_table :prototype_bids_yyyymmdd
+    drop_table prototype_name(:bids)
     create_prototype_table :bids, :id => false, :partitioned => 'weekly', :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
       t.string :request_id, :limit => 100, :encode => :lzo
       t.integer :event_time, :limit => 8, :encode => :delta
@@ -127,7 +127,7 @@ class NewBidsPrototypeTable < ActiveRecord::Migration
   end
 
   def down
-    drop_table :prototype_bids_yyyymmdd
+    drop_table prototype_name(:bids)
     create_prototype_table :bids, :id => false, :partitioned => :weekly,
       :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
       t.string :request_id, :encode => :lzo

@@ -19,7 +19,7 @@ module MigrationHelper
       # Add column to view
       add_view_column(table_name, column_name, type, options)
       # Add column to prototype
-      super(prototype_name(table_name, options[:partitioned]), column_name, type, options)
+      super(prototype_name(table_name), column_name, type, options)
     else
       super(table_name, column_name, type, options)
     end
@@ -31,7 +31,7 @@ module MigrationHelper
       # Remove column from view
       remove_view_column(table_name, options[:partitioned], *column_names)
       # Remove column from prototype
-      super(prototype_name(table_name, options[:partitioned]), *column_names)
+      super(prototype_name(table_name), *column_names)
     else
       super(table_name, *column_names)
     end
@@ -42,7 +42,7 @@ module MigrationHelper
       # Rename column in view
       rename_view_column(table_name, options[:partitioned], column_name, new_column_name)
       # Rename column in prototype
-      super(prototype_name(table_name, options[:partitioned]), column_name, new_column_name)
+      super(prototype_name(table_name), column_name, new_column_name)
     else
       super(table_name, column_name, new_column_name)
     end
@@ -102,8 +102,7 @@ module MigrationHelper
   end
   
   def create_prototype_table(table_name, options = {})
-    partitioned = extract_partitioned_option(options)
-    create_table(prototype_name(table_name, partitioned), options) do |td|
+    create_table(prototype_name(table_name), options) do |td|
       yield td if block_given?
     end
   end
@@ -169,18 +168,8 @@ module MigrationHelper
     "#{prefix}_#{pattern}"
   end
   
-  def prototype_name(table_name, partitioned)
-    suffix = case partitioned
-    when :hourly
-      'yyyymmddhh'
-    when :weekly
-      'yyyymmdd'
-    when :monthly
-      'yyyymm'
-    else
-      raise "Unrecognized option for 'partitioned': #{partitioned}"
-    end
-    "prototype_#{table_name}_#{suffix}"
+  def prototype_name(table_name)
+    "prototype_#{table_name}"
   end
   
   def extract_partitioned_option(options)

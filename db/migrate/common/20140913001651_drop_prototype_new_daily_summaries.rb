@@ -1,6 +1,6 @@
 class DropPrototypeNewDailySummaries < ActiveRecord::Migration
   def up
-    drop_table :prototype_new_daily_summaries_yyyymm
+    drop_table prototype_name(:new_daily_summaries)
   end
 
   def down

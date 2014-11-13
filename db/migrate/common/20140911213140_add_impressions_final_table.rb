@@ -1,5 +1,5 @@
 class AddImpressionsFinalTable < ActiveRecord::Migration
-  def up
+  def change
     create_prototype_table :impressions_final, :id => false, :partitioned => :monthly,
       :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
       t.string :request_id, :limit => 100, :encode => :lzo
@@ -120,9 +120,5 @@ class AddImpressionsFinalTable < ActiveRecord::Migration
       t.integer :pipeline_id, :limit => 2, :encode => :lzo
       t.float :location_score, :encode => :raw
     end
-  end
-
-  def down
-    drop_table :prototype_impressions_final_yyyymm
   end
 end
