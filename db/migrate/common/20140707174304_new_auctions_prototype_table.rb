@@ -1,6 +1,6 @@
 class NewAuctionsPrototypeTable < ActiveRecord::Migration
   def up
-    drop_table :prototype_auctions_yyyymmdd
+    drop_table prototype_name(:auctions)
     create_prototype_table :auctions, :id => false, :partitioned => :weekly,
           :options => 'SORTKEY (report_partition, event_time)' do |t|
       t.string :tn_bid_id, :limit => 40, :encode => :lzo
@@ -102,7 +102,7 @@ class NewAuctionsPrototypeTable < ActiveRecord::Migration
   end
 
   def down
-    drop_table :prototype_auctions_yyyymmdd
+    drop_table prototype_name(:auctions)
     create_prototype_table :auctions, :id => false, :partitioned => :weekly,
       :options => 'SORTKEY (report_partition, event_time)' do |t|
       t.string :tn_bid_id, :encode => :lzo

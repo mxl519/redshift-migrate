@@ -1,6 +1,6 @@
 class CreateMapsenseEventsPrototypeTable < ActiveRecord::Migration
   def up
-    drop_table :prototype_mapsense_events_yyyymmdd
+    drop_table prototype_name(:mapsense_events)
     create_prototype_table :mapsense_events, :id => false, :partitioned => :weekly, :options => 'SORTKEY (report_partition, event_time)' do |t|
       t.timestamp :report_partition, :encode => :lzo
       t.integer :event_time, :limit => 8, :encode => :delta
@@ -87,7 +87,7 @@ class CreateMapsenseEventsPrototypeTable < ActiveRecord::Migration
   end
 
   def down
-    drop_table :prototype_mapsense_events_yyyymmdd
+    drop_table prototype_name(:mapsense_events)
     create_prototype_table :mapsense_events, :id => false, :partitioned => :weekly,
       :options => 'SORTKEY (report_partition, event_time)' do |t|
       t.timestamp :report_partition, :encode => :runlength

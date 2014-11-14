@@ -1,6 +1,6 @@
 class UpdateMonthlySummariesTables < ActiveRecord::Migration
   def up
-    drop_table :prototype_monthly_location_summaries_yyyymm
+    drop_table prototype_name(:monthly_location_summaries)
     create_prototype_table :monthly_location_summaries, :id => false, :partitioned => :monthly,
           :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :lzo
@@ -18,7 +18,7 @@ class UpdateMonthlySummariesTables < ActiveRecord::Migration
       t.integer :url_count, :encode => :lzo
       t.integer :drive_count, :encode => :lzo
     end
-    drop_table :prototype_monthly_creative_summaries_yyyymm
+    drop_table prototype_name(:monthly_creative_summaries)
     create_prototype_table :monthly_creative_summaries, :id => false, :partitioned => :monthly,
       :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :lzo
@@ -39,7 +39,7 @@ class UpdateMonthlySummariesTables < ActiveRecord::Migration
   end
 
   def down
-    drop_table :prototype_monthly_location_summaries_yyyymm
+    drop_table prototype_name(:monthly_location_summaries)
     create_prototype_table :monthly_location_summaries, :id => false, :partitioned => :monthly,
           :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :lzo
@@ -57,7 +57,7 @@ class UpdateMonthlySummariesTables < ActiveRecord::Migration
       t.integer :url_count, :encode => :lzo
       t.integer :drive_count, :encode => :lzo
     end
-    drop_table :prototype_monthly_creative_summaries_yyyymm
+    drop_table prototype_name(:monthly_creative_summaries)
     create_prototype_table :monthly_creative_summaries, :id => false, :partitioned => :monthly,
       :options => 'DISTSTYLE KEY DISTKEY(contract_id) SORTKEY (report_date)' do |t|
       t.date :report_date, :encode => :delta

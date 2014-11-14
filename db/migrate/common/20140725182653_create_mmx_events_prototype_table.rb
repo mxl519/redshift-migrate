@@ -1,6 +1,6 @@
 class CreateMmxEventsPrototypeTable < ActiveRecord::Migration
   def up
-    drop_table :prototype_mmx_events_yyyymmdd
+    drop_table prototype_name(:mmx_events)
     create_prototype_table :mmx_events, :id => false, :options => 'SORTKEY (report_partition, event_time)', :partitioned => :weekly do |t|
       t.timestamp :report_partition, :encode => :lzo
       t.integer :event_time, :limit => 8, :encode => :delta
@@ -106,7 +106,7 @@ class CreateMmxEventsPrototypeTable < ActiveRecord::Migration
   end
 
   def down
-    drop_table :prototype_mmx_events_yyyymmdd
+    drop_table prototype_name(:mmx_events)
     create_prototype_table :mmx_events, :id => false, :partitioned => :weekly,
       :options => 'SORTKEY (report_partition, event_time)' do |t|
       t.timestamp :report_partition, :encode => :runlength

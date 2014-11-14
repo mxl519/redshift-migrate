@@ -1,5 +1,5 @@
 class AddWinNoticesPrototypeTable < ActiveRecord::Migration
-  def up
+  def change
     create_prototype_table :win_notices, :id => false, :partitioned => :monthly,
       :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
       t.string :request_id, :limit => 100, :encode => :lzo
@@ -121,9 +121,5 @@ class AddWinNoticesPrototypeTable < ActiveRecord::Migration
       t.float :location_score, :encode => :raw
       t.integer :count_for_attribution, :limit => 2, :encode => :runlength
     end
-  end
-
-  def down
-    drop_table :prototype_win_notices_yyyymm
   end
 end

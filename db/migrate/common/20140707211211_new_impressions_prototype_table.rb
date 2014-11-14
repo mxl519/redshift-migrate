@@ -1,6 +1,6 @@
 class NewImpressionsPrototypeTable < ActiveRecord::Migration
   def up
-    drop_table :prototype_impressions_yyyymm
+    drop_table prototype_name(:impressions)
     create_prototype_table :impressions, :id => false, :partitioned => :monthly,
       :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
       t.string :request_id, :limit => 100, :encode => :lzo
@@ -124,7 +124,7 @@ class NewImpressionsPrototypeTable < ActiveRecord::Migration
   end
 
   def down
-    drop_table :prototype_impressions_yyyymm
+    drop_table prototype_name(:impressions)
     create_prototype_table :impressions, :id => false, :partitioned => :monthly,
       :options => 'DISTSTYLE KEY DISTKEY(tn_bid_id) SORTKEY (report_partition, event_time)' do |t|
       t.string :request_id, :encode => :lzo
