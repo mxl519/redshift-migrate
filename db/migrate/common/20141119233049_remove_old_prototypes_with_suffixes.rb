@@ -1,6 +1,12 @@
 class RemoveOldPrototypesWithSuffixes < ActiveRecord::Migration
   # Clean up backwards-compatibility from CreatePrototypesWithoutSuffixes
-  def up
+  def change
+    # This migration was for changing from an older system of partitioned tables
+    # and is no longer applicable with the new helpers
+  end
+
+  private
+  def original_up
     drop_table old_prototype_name(:bids_raw, :hourly)
     drop_table old_prototype_name(:events, :hourly)
 
@@ -23,7 +29,7 @@ class RemoveOldPrototypesWithSuffixes < ActiveRecord::Migration
     drop_table old_prototype_name(:mmx_events, :weekly)
   end
 
-  def down
+  def original_down
     create_prototype_table_like_prototype_without_suffix(:bids_raw, :hourly)
     create_prototype_table_like_prototype_without_suffix(:events, :hourly)
 
