@@ -1,5 +1,11 @@
 class CreatePrototypesWithoutSuffixes < ActiveRecord::Migration
-  def up
+  def change
+    # This migration was for changing from an older system of partitioned tables
+    # and should not be run on any future databases
+  end
+
+  private
+  def original_up
     create_prototype_table_like_prototype_with_suffix(:bids_raw, :hourly)
     create_prototype_table_like_prototype_with_suffix(:events, :hourly)
 
@@ -22,7 +28,7 @@ class CreatePrototypesWithoutSuffixes < ActiveRecord::Migration
     create_prototype_table_like_prototype_with_suffix(:mmx_events, :weekly)
   end
 
-  def down
+  def original_down
     drop_table new_prototype_name(:bids_raw)
     drop_table new_prototype_name(:events)
 
