@@ -26,7 +26,7 @@ namespace :db do
   end
   
   desc "db:migrate production ops"
-  task :migrate_production_engineering => [:set_production_ops_env, :environment] do
+  task :migrate_production_ops => [:set_production_ops_env, :environment] do
     migrate_cluster
   end
 
