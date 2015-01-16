@@ -32,6 +32,15 @@ ROLLING BACK A MIGRATION
   - ```rake db:rollback_sandbox```
   - ~~```rake db:rollback_production```~~ Nope, rolling back migrations on multiple prod clusters is dangerous because you could be rolling back two different migrations!
 
+CHECKING WHAT MIGRATIONS HAVE AND HAVEN'T BEEN RUN
+==================================================
+Single cluster only, because it outputs a list of _all_ the migrations.
+- ```rake db:migrate_status_sandbox_engineering```
+- ```rake db:migrate_status_sandbox_ops```
+- ```rake db:migrate_status_production_ops```
+- ```rake db:migrate_status_production_engineering```
+
+
 NOTE
 ====
 Do not chain multiple targets when using these rake tasks!
