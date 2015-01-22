@@ -140,15 +140,16 @@ module MigrationHelper
   end
   
   def update_view(view_name, options = {})
-    if options[:partitioned] == :hourly
-      yield
-    else
+    view_needed = self.connection.table_exists?(view_name)
+    if view_needed
       begin
         drop_view(view_name, options)
         yield
       ensure
         create_view(view_name, options)
       end
+    else
+      yield
     end
   end
 
