@@ -54,7 +54,7 @@ module MigrationHelper
     require 'redshift_adapter_helper'
     options = options.dup
     partitioned = extract_partitioned_option(options)
-    raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly, :hourly].include? partitioned
+    raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly, :hourly, :daily].include? partitioned
     update_view(view_name, :partitioned => partitioned) do
       table_names = list_all_tables(view_name, partitioned)
       table_names.each { |table_name| add_column(table_name, column_name, type, options) }
@@ -118,6 +118,9 @@ module MigrationHelper
     when :monthly
       current_table = monthly_table_name(prefix, time)
       previous_table = monthly_table_name(prefix, time - 1.month)
+    when :daily
+      current_table = daily_table_name(prefix, time)
+      previous_table = daily_table_name(prefix, time - 1.day)
     else
       return
     end
@@ -159,6 +162,8 @@ module MigrationHelper
     pattern = case partitioned
     when :hourly
       '\\\\d{10}'
+    when :daily
+      '\\\\d{8}'
     when :weekly
       '\\\\d{8}'
     when :monthly
@@ -183,6 +188,10 @@ module MigrationHelper
   
   def weekly_table_name(prefix, week)
     "#{prefix}_#{week.beginning_of_week(:sunday).strftime('%Y%m%d')}"
+  end
+
+  def daily_table_name(prefix, day)
+    "#{prefix}_#{day.strftime('%Y%m%d')}"
   end
 end
 
