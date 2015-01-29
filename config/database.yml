@@ -10,7 +10,7 @@ sandbox_engineering:
 production_engineering:
   adapter: redshift
   database: production
-  host: thinknear-production-2014-06.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
+  host: thinknear-production-2015-01.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
   port: 5439
   username: scout
   password: sc0utAd$
