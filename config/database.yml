@@ -34,6 +34,24 @@ production_ops:
   password: sc0utAd$
   pool: 2
 
+sandbox_avails:
+  adapter: redshift
+  database: avails
+  host: mxl.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
+  port: 5439
+  username: mxl
+  password: sc0utAd$
+  pool: 2
+
+production_avails:
+  adapter: redshift
+  database: avails
+  host: thinknear-ops-avails-2015-03.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
+  port: 5439
+  username: scout
+  password: sc0utAd$
+  pool: 2
+
 development:
   adapter: redshift
   database: dev
