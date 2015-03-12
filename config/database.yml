@@ -45,8 +45,8 @@ sandbox_avails:
 
 production_avails:
   adapter: redshift
-  database: avails
-  host: thinknear-ops-avails-2015-03.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
+  database: production
+  host: thinknear-avails-2015-03.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
   port: 5439
   username: scout
   password: sc0utAd$
