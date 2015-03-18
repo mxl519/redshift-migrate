@@ -99,34 +99,46 @@ namespace :db do
   end
 
   # Check status of individual clusters
-  desc "db:migrate:status sandbox engineering"
-  task :migrate_status_sandbox_engineering => [:set_sandbox_engineering_env, :environment] do
-    status_cluster
+  namespace :migrate_sandbox_engineering do
+    desc "db:migrate:status sandbox engineering"
+    task :status => [:set_sandbox_engineering_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status sandbox ops"
-  task :migrate_status_sandbox_ops => [:set_sandbox_ops_env, :environment] do
-    status_cluster
+  namespace :migrate_sandbox_ops do
+    desc "db:migrate:status sandbox ops"
+    task :status => [:set_sandbox_ops_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status sandbox ops avails"
-  task :migrate_status_sandbox_avails => [:set_sandbox_avails_env, :environment] do
-    status_cluster
+  namespace :migrate_sandbox_avails do
+    desc "db:migrate:status sandbox ops avails"
+    task :status => [:set_sandbox_avails_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status production engineering"
-  task :migrate_status_production_engineering => [:set_production_engineering_env, :environment] do
-    status_cluster
+  namespace :migrate_production_engineering do
+    desc "db:migrate:status production engineering"
+    task :status => [:set_production_engineering_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status production ops"
-  task :migrate_status_production_ops => [:set_production_ops_env, :environment] do
-    status_cluster
+  namespace :migrate_production_ops do
+    desc "db:migrate:status production ops"
+    task :status => [:set_production_ops_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status production ops avails"
-  task :migrate_status_production_avails => [:set_production_avails_env, :environment] do
-    status_cluster
+  namespace :migrate_production_avails do
+    desc "db:migrate:status production ops avails"
+    task :status => [:set_production_avails_env, :environment] do
+      status_cluster
+    end
   end
 
   # Helper methods for setting the environment - NOT TO BE USED FOR OTHER TASKS OR FROM THE COMMAND LINE!
