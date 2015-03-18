@@ -1,4 +1,31 @@
 namespace :db do
+  # Create user specific databases
+  desc "CREATE DATABASE for user specific DBs on sandbox for the current REDSHIFT_SANDBOX_PREFIX"
+  task :create_user_sandbox => [:environment] do
+    if Rails.env[/production/]
+      raise "Cannot create user sandbox databases in production environment: #{Rails.env}"
+    end
+
+    prefix = ENV['REDSHIFT_SANDBOX_PREFIX']
+    if prefix.blank?
+      raise "Cannot create user sandbox databases for blank REDSHIFT_SANDBOX_PREFIX"
+    end
+
+    databases = %w[engineering ops avails].map{ |db| "#{prefix}_#{db}" }
+
+    conn = ActiveRecord::Base.connection
+    begin
+      remote_databases = conn.execute('SELECT datname FROM pg_database WHERE NOT datistemplate').values.flatten
+      databases_to_create = databases - remote_databases
+
+      databases_to_create.each do |db|
+        conn.execute("CREATE DATABASE #{db}")
+      end
+    ensure
+      conn.close()
+    end
+  end
+
   # Migrate multiple clusters
   desc "db:migrate all sandbox clusters"
   task :migrate_sandbox => [:migrate_sandbox_engineering, :migrate_sandbox_ops, :migrate_sandbox_avails]
@@ -72,34 +99,46 @@ namespace :db do
   end
 
   # Check status of individual clusters
-  desc "db:migrate:status sandbox engineering"
-  task :migrate_status_sandbox_engineering => [:set_sandbox_engineering_env, :environment] do
-    status_cluster
+  namespace :migrate_sandbox_engineering do
+    desc "db:migrate:status sandbox engineering"
+    task :status => [:set_sandbox_engineering_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status sandbox ops"
-  task :migrate_status_sandbox_ops => [:set_sandbox_ops_env, :environment] do
-    status_cluster
+  namespace :migrate_sandbox_ops do
+    desc "db:migrate:status sandbox ops"
+    task :status => [:set_sandbox_ops_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status sandbox ops avails"
-  task :migrate_status_sandbox_avails => [:set_sandbox_avails_env, :environment] do
-    status_cluster
+  namespace :migrate_sandbox_avails do
+    desc "db:migrate:status sandbox ops avails"
+    task :status => [:set_sandbox_avails_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status production engineering"
-  task :migrate_status_production_engineering => [:set_production_engineering_env, :environment] do
-    status_cluster
+  namespace :migrate_production_engineering do
+    desc "db:migrate:status production engineering"
+    task :status => [:set_production_engineering_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status production ops"
-  task :migrate_status_production_ops => [:set_production_ops_env, :environment] do
-    status_cluster
+  namespace :migrate_production_ops do
+    desc "db:migrate:status production ops"
+    task :status => [:set_production_ops_env, :environment] do
+      status_cluster
+    end
   end
 
-  desc "db:migrate:status production ops avails"
-  task :migrate_status_production_avails => [:set_production_avails_env, :environment] do
-    status_cluster
+  namespace :migrate_production_avails do
+    desc "db:migrate:status production ops avails"
+    task :status => [:set_production_avails_env, :environment] do
+      status_cluster
+    end
   end
 
   # Helper methods for setting the environment - NOT TO BE USED FOR OTHER TASKS OR FROM THE COMMAND LINE!
@@ -160,7 +199,10 @@ namespace :db do
   end
 
   def reload_connection(stage)
-    ActiveRecord::Base.establish_connection(YAML::load(File.open('config/database.yml'))[stage])
+    puts "STAGE = #{stage}"
+    database_configuration = YAML::load(ERB.new(File.open('config/database.yml').read).result)[stage]
+    puts "database = #{database_configuration['database']}"
+    ActiveRecord::Base.establish_connection(database_configuration)
     load "#{Rails.root}/config/initializers/schema_migration.rb"
   end
 end

@@ -1,6 +1,6 @@
 sandbox_engineering:
   adapter: redshift
-  database: engineering
+  database: <%= ENV['REDSHIFT_SANDBOX_DB'] || ENV['REDSHIFT_SANDBOX_PREFIX'].try(:+, '_engineering') || 'engineering' %>
   host: mxl.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
   port: 5439
   username: mxl
@@ -18,7 +18,7 @@ production_engineering:
 
 sandbox_ops:
   adapter: redshift
-  database: ops
+  database: <%= ENV['REDSHIFT_SANDBOX_DB'] || ENV['REDSHIFT_SANDBOX_PREFIX'].try(:+, '_ops') || 'ops' %>
   host: mxl.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
   port: 5439
   username: mxl
@@ -36,7 +36,7 @@ production_ops:
 
 sandbox_avails:
   adapter: redshift
-  database: avails
+  database: <%= ENV['REDSHIFT_SANDBOX_DB'] || ENV['REDSHIFT_SANDBOX_PREFIX'].try(:+, '_avails') || 'avails' %>
   host: mxl.chfzr25wnyxl.us-east-1.redshift.amazonaws.com
   port: 5439
   username: mxl
