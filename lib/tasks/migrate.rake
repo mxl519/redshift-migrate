@@ -1,4 +1,31 @@
 namespace :db do
+  # Create user specific databases
+  desc "CREATE DATABASE for user specific DBs on sandbox for the current REDSHIFT_SANDBOX_PREFIX"
+  task :create_user_sandbox => [:environment] do
+    if Rails.env[/production/]
+      raise "Cannot create user sandbox databases in production environment: #{Rails.env}"
+    end
+
+    prefix = ENV['REDSHIFT_SANDBOX_PREFIX']
+    if prefix.blank?
+      raise "Cannot create user sandbox databases for blank REDSHIFT_SANDBOX_PREFIX"
+    end
+
+    databases = %w[engineering ops avails].map{ |db| "#{prefix}_#{db}" }
+
+    conn = ActiveRecord::Base.connection
+    begin
+      remote_databases = conn.execute('SELECT datname FROM pg_database WHERE NOT datistemplate').values.flatten
+      databases_to_create = databases - remote_databases
+
+      databases_to_create.each do |db|
+        conn.execute("CREATE DATABASE #{db}")
+      end
+    ensure
+      conn.close()
+    end
+  end
+
   # Migrate multiple clusters
   desc "db:migrate all sandbox clusters"
   task :migrate_sandbox => [:migrate_sandbox_engineering, :migrate_sandbox_ops, :migrate_sandbox_avails]
@@ -160,7 +187,10 @@ namespace :db do
   end
 
   def reload_connection(stage)
-    ActiveRecord::Base.establish_connection(YAML::load(File.open('config/database.yml'))[stage])
+    puts "STAGE = #{stage}"
+    database_configuration = YAML::load(ERB.new(File.open('config/database.yml').read).result)[stage]
+    puts "database = #{database_configuration['database']}"
+    ActiveRecord::Base.establish_connection(database_configuration)
     load "#{Rails.root}/config/initializers/schema_migration.rb"
   end
 end
