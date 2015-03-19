@@ -3,18 +3,12 @@ module MigrationHelper
   extend ActiveSupport::Concern
 
   def create_table(table_name, options = {})
-    # Lazy-load the library overwriting the RedshiftAdapter,
-    # because that gets lazy-loaded by Rails once the db connects
-    require 'redshift_adapter_helper'
     super(table_name, options) do |td|
       yield td if block_given?
     end
   end
 
   def add_column(table_name, column_name, type, options = {})
-    # Lazy-load the library overwriting the RedshiftAdapter,
-    # because that gets lazy-loaded by Rails once the db connects
-    require 'redshift_adapter_helper'
     if options[:partitioned]
       # Add column to view
       add_view_column(table_name, column_name, type, options)
@@ -49,9 +43,6 @@ module MigrationHelper
   end
   
   def add_view_column(view_name, column_name, type, options = {})
-    # Lazy-load the library overwriting the RedshiftAdapter,
-    # because that gets lazy-loaded by Rails once the db connects
-    require 'redshift_adapter_helper'
     options = options.dup
     partitioned = extract_partitioned_option(options)
     raise "Did not understand 'partitioned' option '#{partitioned}'." unless [:weekly, :monthly, :hourly, :daily].include? partitioned
