@@ -5,6 +5,8 @@ gem 'rails', '3.2.17'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
+gem 'awesome_print'
+
 gem 'activerecord-redshift-adapter'
 gem 'migration_comments'
 

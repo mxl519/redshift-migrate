@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemaMeta xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://schemaspy.sourceforge.net/xmlschema/2011/02/05/schemaspy.meta.xsd">
+   <comments>
+      Ops Database
+   </comments>
+  <tables>
+    <!-- Define primary/foreign key relationships from outside Redshift below -->
+
+    <!-- Ventura Domain Tables -->
+    <table name="clients">
+      <column name="id" primaryKey="true"/>
+    </table>
+    <table name="advertisers">
+      <column name="id" primaryKey="true"/>
+      <column name="client_id">
+        <foreignKey table="clients" column="id"/>
+      </column>
+      <column name="manager_id">
+        <foreignKey table="users" column="id"/>
+      </column>
+      <column name="sales_rep_id">
+        <foreignKey table="users" column="id"/>
+      </column>
+      <column name="trafficker_id">
+        <foreignKey table="users" column="id"/>
+      </column>
+    </table>
+    <table name="contracts">
+      <column name="id" primaryKey="true"/>
+      <column name="advertiser_id">
+        <foreignKey table="advertisers" column="id"/>
+      </column>
+    </table>
+    <table name="insertion_orders">
+      <column name="id" primaryKey="true"/>
+      <column name="contract_id">
+        <foreignKey table="contracts" column="id"/>
+      </column>
+    </table>
+    <table name="campaigns">
+      <column name="id" primaryKey="true"/>
+      <column name="insertion_order_id">
+        <foreignKey table="insertion_orders" column="id"/>
+      </column>
+    </table>
+    <table name="targeting_profiles">
+      <column name="id" primaryKey="true"/>
+      <column name="campaign_id">
+        <foreignKey table="campaigns" column="id"/>
+      </column>
+    </table>
+    <table name="locations">
+      <column name="id" primaryKey="true"/>
+      <column name="campaign_id">
+        <foreignKey table="campaigns" column="id"/>
+      </column>
+      <column name="destination_id">
+        <foreignKey table="destinations" column="id"/>
+      </column>
+    </table>
+    <table name="destinations">
+      <column name="id" primaryKey="true"/>
+      <column name="campaign_id">
+        <foreignKey table="campaigns" column="id"/>
+      </column>
+    </table>
+    <table name="creatives">
+      <column name="id" primaryKey="true"/>
+      <column name="advertiser_id">
+        <foreignKey table="advertisers" column="id"/>
+      </column>
+    </table>
+    <table name="native_ads">
+      <column name="id" primaryKey="true"/>
+      <column name="creative_id">
+        <foreignKey table="creatives" column="id"/>
+      </column>
+    </table>
+    <table name="line_items">
+      <column name="id" primaryKey="true"/>
+      <column name="advertiser_id">
+        <foreignKey table="advertisers" column="id"/>
+      </column>
+      <column name="campaign_id">
+        <foreignKey table="campaigns" column="id"/>
+      </column>
+      <column name="creative_id">
+        <foreignKey table="creatives" column="id"/>
+      </column>
+    </table>
+
+    <table name="users">
+      <column name="id" primaryKey="true"/>
+      <column name="client_id">
+        <foreignKey table="clients" column="id"/>
+      </column>
+    </table>
+    <table name="dashboard_advertisers_users">
+      <column name="user_id">
+        <foreignKey table="users" column="id"/>
+      </column>
+      <column name="advertiser_id">
+        <foreignKey table="advertisers" column="id"/>
+      </column>
+    </table>
+
+    <table name="app_profiles">
+      <column name="id" primaryKey="true"/>
+    </table>
+
+    <!-- Event Tables -->
+    <table name="prototype_bids">
+      <column name="tn_bid_id">
+        <foreignKey table="prototype_auctions" column="tn_bid_id"/>
+      </column>
+    </table>
+    <table name="prototype_impressions">
+      <column name="tn_bid_id">
+        <foreignKey table="prototype_bids" column="tn_bid_id"/>
+      </column>
+    </table>
+    <table name="prototype_win_notices">
+      <column name="tn_bid_id">
+        <foreignKey table="prototype_bids" column="tn_bid_id"/>
+      </column>
+    </table>
+    <table name="prototype_impressions_final">
+      <column name="tn_bid_id">
+        <foreignKey table="prototype_bids" column="tn_bid_id"/>
+      </column>
+    </table>
+    <table name="prototype_clicks">
+      <column name="tn_bid_id">
+        <foreignKey table="prototype_bids" column="tn_bid_id"/>
+      </column>
+    </table>
+    <table name="prototype_conversions">
+      <column name="tn_bid_id">
+        <foreignKey table="prototype_bids" column="tn_bid_id"/>
+      </column>
+    </table>
+    <table name="prototype_tracking">
+      <column name="tn_bid_id">
+        <foreignKey table="prototype_bids" column="tn_bid_id"/>
+      </column>
+    </table>
+  </tables>
+</schemaMeta>
