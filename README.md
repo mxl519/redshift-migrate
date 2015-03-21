@@ -1,7 +1,5 @@
 PROJECT FOR RUNNING REDSHIFT MIGRATIONS
 
-Verified to work with ruby 2.1.2
-
 CREATING A MIGRATION
 ====================
 1. Create your migration file with `rails generate migration MIGRATION_NAME_HERE`
