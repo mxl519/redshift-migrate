@@ -10,6 +10,12 @@
 # Ignore the db schema.
 /db/schema.rb
 
+# Ignore downloaded binaries for SchemaSpy
+/script/schemaspy/*.jar
+
+# Generated html documentation
+/doc/schema/html/*
+
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
