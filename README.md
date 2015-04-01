@@ -14,8 +14,8 @@ If a clean schema is needed, use the following to create a separate set of sandb
 
 CREATING A MIGRATION
 ====================
-1. Create your migration file with `rails generate migration MIGRATION_NAME_HERE`
-2. Move migration file to proper db subdirectory, ```common``` for migrations to be run on both clusters.
+1. Create your migration file with `RAILS_ENV=sandbox_engineering rails generate migration MIGRATION_NAME_HERE` (exact cluster doesn't matter as long as it exists in database.yml)
+2. Move migration file to proper db subdirectory. ```common``` migrations run on engineering and ops clusters. If you need it to run on avails and another cluster, copy it to both.
 3. Test it out on sandbox (`rake db:migrate_sandbox` locally will run migrations to both sandbox DBs)
 4. Make a PR
 5. After the PR gets merged, run the migration on production with `rake db:migrate_production`
