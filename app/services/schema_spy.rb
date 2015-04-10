@@ -2,10 +2,11 @@ require 'open-uri'
 
 class SchemaSpy
   # Regexps use Java Regexp syntax for interpretation by SchemaSpy.jar
+  # Matches require whole-string match `Matcher#matches()`
   TABLE_EXCLUDES = [
     'schema_migrations', # ActiveRecord migrations file
-    '_\d{4,}$', # partitioned tables
-    '^sym_' # symmetricDS
+    '.*_\d{4,}$', # partitioned tables
+    '^sym_.*' # symmetricDS
   ]
   TABLE_EXCLUDES_REGEXP = "(#{TABLE_EXCLUDES.join('|')})"
 
@@ -100,6 +101,8 @@ class SchemaSpy
 
     args[:jar] = options[:schema_spy_jar] || find_schema_spy_jar
     args[:dp] = options[:jdbc_driver] || find_jdbc_driver
+
+    args[:loglevel] = options[:loglevel] if options.has_key?(:loglevel)
 
     environment = options[:environment] || Rails.env
     cluster = cluster_from_environment(environment)
