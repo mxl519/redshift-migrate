@@ -98,11 +98,16 @@ namespace :db do
     rollback_cluster
   end
 
-  # Check status of individual clusters
+  # Check status and migrate down of individual clusters
   namespace :migrate_sandbox_engineering do
     desc "db:migrate:status sandbox engineering"
     task :status => [:set_sandbox_engineering_env, :environment] do
       status_cluster
+    end
+
+    desc "db:migrate:down sandbox engineering"
+    task :down => [:set_sandbox_engineering_env, :environment] do
+      migrate_down_cluster
     end
   end
 
@@ -111,12 +116,22 @@ namespace :db do
     task :status => [:set_sandbox_ops_env, :environment] do
       status_cluster
     end
+
+    desc "db:migrate:down sandbox ops"
+    task :down => [:set_sandbox_ops_env, :environment] do
+      migrate_down_cluster
+    end
   end
 
   namespace :migrate_sandbox_avails do
     desc "db:migrate:status sandbox ops avails"
     task :status => [:set_sandbox_avails_env, :environment] do
       status_cluster
+    end
+
+    desc "db:migrate:down sandbox ops avails"
+    task :down => [:set_sandbox_avails_env, :environment] do
+      migrate_down_cluster
     end
   end
 
@@ -125,6 +140,11 @@ namespace :db do
     task :status => [:set_production_engineering_env, :environment] do
       status_cluster
     end
+
+    desc "db:migrate:down production engineering"
+    task :down => [:set_production_engineering_env, :environment] do
+      migrate_down_cluster
+    end
   end
 
   namespace :migrate_production_ops do
@@ -132,12 +152,22 @@ namespace :db do
     task :status => [:set_production_ops_env, :environment] do
       status_cluster
     end
+
+    desc "db:migrate:down production ops"
+    task :down => [:set_production_ops_env, :environment] do
+      migrate_down_cluster
+    end
   end
 
   namespace :migrate_production_avails do
     desc "db:migrate:status production ops avails"
     task :status => [:set_production_avails_env, :environment] do
       status_cluster
+    end
+
+    desc "db:migrate:down production ops avails"
+    task :down => [:set_production_avails_env, :environment] do
+      migrate_down_cluster
     end
   end
 
@@ -188,6 +218,14 @@ namespace :db do
     reload_connection(stage)
     Rake::Task['db:migrate'].execute
     puts "Finished migrating #{stage}."
+  end
+
+  def migrate_down_cluster
+    stage = ENV['RAILS_ENV']
+    puts "Migrating DOWN #{stage}..."
+    reload_connection(stage)
+    Rake::Task['db:migrate:down'].execute
+    puts "Finished migrating DOWN #{stage}."
   end
   
   def rollback_cluster
