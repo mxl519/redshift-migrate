@@ -69,4 +69,5 @@ GENERATING DOCUMENTATION
 
 NOTE
 ====
-Do not chain multiple targets when using these rake tasks!
+- Do not chain multiple targets when using these rake tasks!
+- Postgres text-unlimited should have a 65K limit string column in redshift
