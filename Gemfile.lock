@@ -52,6 +52,8 @@ GEM
     mime-types (1.25.1)
     multi_json (1.10.1)
     pg (0.17.1)
+    pg_query (0.5.0)
+      json (~> 1.8)
     polyglot (0.3.5)
     rack (1.4.5)
     rack-cache (1.2)
@@ -103,6 +105,7 @@ DEPENDENCIES
   awesome_print
   jquery-rails
   migration_comments
+  pg_query (~> 0.5.0)
   rails (= 3.2.17)
   turn (= 0.8.2)
   uglifier (>= 1.0.3)

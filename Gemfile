@@ -9,6 +9,7 @@ gem 'awesome_print'
 
 gem 'activerecord-redshift-adapter'
 gem 'migration_comments'
+gem 'pg_query', '~> 0.5.0'
 
 # Gems used only for assets and not required
 # in production environments by default.
