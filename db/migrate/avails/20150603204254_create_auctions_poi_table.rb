@@ -1,6 +1,6 @@
 class CreateAuctionsPoiTable < ActiveRecord::Migration
   def change
-    create_prototype_table :auctions_poi, :id => false, :partitioned => :weekly,
+    create_prototype_table :auctions_poi, :id => false, :partitioned => :monthly,
                            :options => 'DISTSTYLE KEY DISTKEY(new_tn_user_id)' do |t|
       t.timestamp :report_hour, :encode => :lzo
       t.string :new_tn_user_id, :encode => :lzo
