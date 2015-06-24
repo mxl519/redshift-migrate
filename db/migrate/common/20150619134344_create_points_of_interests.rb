@@ -1,11 +1,10 @@
-class CreateTelenavPoi < ActiveRecord::Migration
+class CreatePointsOfInterests < ActiveRecord::Migration
   def up
-    create_table :telenav_poi, :options => 'SORTKEY (id)' do |t|
+    create_table :points_of_interests, :options => 'SORTKEY (id)' do |t|
       t.string  :entity_name, :encode => :text255
-      t.string  :entity_type, :encode => :text255
       t.string  :street, :encode => :text255
       t.string  :city, :encode => :text255
-      t.string  :zip, :encode => :text255
+      t.string  :postal_code, :encode => :text255
       t.string  :state, :encode => :text255
       t.string  :country, :encode => :text255
       t.string  :nielsen_dma, :encode => :text255
@@ -13,16 +12,15 @@ class CreateTelenavPoi < ActiveRecord::Migration
       t.float   :longitude, :encode => :raw
       t.integer :normalized_lat, :encode => :lzo
       t.integer :normalized_lon, :encode => :lzo
-      t.string  :timezone, :encode => :text255
       t.string  :brand_code, :encode => :text255
-      t.string  :category_name, limit: 512, :encode => :text32k
       t.string  :category_id, :encode => :text32k
-      t.string  :category_id_label, limit: 512, :encode => :text32k
+      t.string  :poi_provider, :encode => :text255
+      t.integer :poi_provider_id, :encode => :lzo
     end
-    grant_select :telenav_poi
+    grant_select :points_of_interests
   end
 
   def down
-    drop_table :telenav_poi
+    drop_table :points_of_interests
   end
 end
