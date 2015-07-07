@@ -109,3 +109,6 @@ DEPENDENCIES
   rails (= 3.2.17)
   turn (= 0.8.2)
   uglifier (>= 1.0.3)
+
+BUNDLED WITH
+   1.10.4

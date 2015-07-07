@@ -118,7 +118,7 @@ class RemoveSortKeyAuctions < ActiveRecord::Migration
   def down
     drop_table :prototype_auctions
     create_prototype_table :auctions, :id => false, :partitioned => :weekly,
-                           :options => 'SORTKEY (report_partition, event_time)' do |t|
+                           :options => 'SORTKEY (report_hour, event_time)' do |t|
       t.string :tn_bid_id, :limit => 40, :encode => :lzo
       t.string :auction_id, :limit => 40, :encode => :lzo
       t.integer :auction_type, :encode => :lzo
@@ -203,7 +203,7 @@ class RemoveSortKeyAuctions < ActiveRecord::Migration
       t.string :imp_0_tag_id, :limit => 40, :encode => :lzo
       t.integer :pipeline_id, :limit => 2, :encode => :lzo
       t.string :imp_0_api_list, :limit => 10, :encode => :lzo
-      t.timestamp :report_partition, :encode => :lzo
+      t.timestamp :report_hour, :encode => :lzo
       t.string :tn_app_id, :limit => 100, :encode => :lzo
       t.string :gc_profile_states, :limit => 512, :encode => :lzo
       t.string :gc_profile_dmas, :limit => 512, :encode => :lzo

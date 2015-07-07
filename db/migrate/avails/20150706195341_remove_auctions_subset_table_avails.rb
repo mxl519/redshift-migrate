@@ -5,7 +5,7 @@ class RemoveAuctionsSubsetTableAvails < ActiveRecord::Migration
 
   def down
     create_prototype_table :auctions_subset, :id => false, :partitioned => :daily,
-                           :options => 'SORTKEY (report_partition)' do |t|
+                           :options => 'SORTKEY (report_hour)' do |t|
       t.string :tn_user_id, :limit => 90, :encode => :lzo
       t.string :tn_app_id, :limit => 100, :encode => :lzo
       t.decimal :latitude, :precision => 12, :scale => 7, :encode => :bytedict
@@ -17,7 +17,7 @@ class RemoveAuctionsSubsetTableAvails < ActiveRecord::Migration
       t.string :zipcode, :limit => 10, :encode => :lzo
       t.column :state, "CHAR(2)", :encode => :lzo
       t.integer :dma, :limit => 2, :encode => :lzo
-      t.timestamp :report_partition, :encode => :runlength
+      t.timestamp :report_hour, :encode => :runlength
       t.integer :pipeline_id, :limit => 2, :encode => :bytedict
       t.string :exchange, :limit => 25, :encode => :text255
       t.float :location_score, :encode => :raw
