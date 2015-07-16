@@ -74,11 +74,16 @@ module MigrationHelper
     options = options.dup
     partitioned = extract_partitioned_option(options)
     view_definition = options[:view_definition]
+    dependent_views = options[:dependent_views] || []
 
     if view_definition.to_s.empty?
       create_view_over_recent_tables(view_name, partitioned)
     else
       create_view_from_definition(view_name, view_definition)
+    end
+
+    dependent_views.each do |view|
+      create_view_as_definition(view[:view_name], view[:view_definition])
     end
   end
 
@@ -87,8 +92,13 @@ module MigrationHelper
     self.connection.drop_view(view_name, options) if self.connection.respond_to? :create_view
 
     return unless self.connection.table_exists?(view_name)
-    statement = "DROP VIEW #{view_name}"
-    execute(statement)
+
+    dependent_views = options[:dependent_views] || []
+    dependent_views.each do |view|
+      execute("DROP VIEW #{view[:view_name]}")
+    end
+
+    execute("DROP VIEW #{view_name}")
   end
 
   def grant_select(table_name)
@@ -142,6 +152,11 @@ module MigrationHelper
     create_view_from_tables(view_name, view_tables)
   end
 
+  def create_view_as_definition(view_name, view_definition)
+    statement = "CREATE OR REPLACE VIEW #{view_name} AS #{view_definition}"
+    execute(statement)
+  end
+
   def extract_tables_from_definition(view_definition)
     PgQuery.parse(view_definition).tables
   end
@@ -157,9 +172,13 @@ module MigrationHelper
     if view_needed
       begin
         # Hack so that create view is reversible
-        view_definition = get_view_definition(view_name)
+        view_definition = get_view_definition(view_name, 'public')
+        dependent_views = get_dependent_views(view_name, 'ops_team')
+
         options = options.dup
         options[:view_definition] = view_definition
+        options[:dependent_views] = dependent_views
+
         drop_view(view_name, options)
         yield
       ensure
@@ -170,10 +189,32 @@ module MigrationHelper
     end
   end
 
-  def get_view_definition(view_name)
-    statement = "SELECT definition FROM pg_views WHERE schemaname = 'public' AND viewname = '#{view_name}'"
+  def get_view_definition(view_name, schema_name)
+    statement = "SELECT definition FROM pg_views WHERE schemaname = '#{schema_name}' AND viewname = '#{view_name}'"
     res = execute(statement)
     res.values.flatten.first
+  end
+
+  def get_dependent_views(view_name, schema_name)
+    statement = %Q[SELECT distinct dependee.relname AS view_name
+        FROM pg_depend
+        JOIN pg_rewrite ON pg_depend.objid = pg_rewrite.oid
+        JOIN pg_class as dependee ON pg_rewrite.ev_class = dependee.oid
+        JOIN pg_class as dependent ON pg_depend.refobjid = dependent.oid
+        JOIN pg_attribute ON pg_depend.refobjid = pg_attribute.attrelid
+        AND pg_depend.refobjsubid = pg_attribute.attnum
+        WHERE dependent.relname = '#{view_name}'
+        AND pg_attribute.attnum > 0 ;
+    ]
+
+    res = execute(statement)
+    dependent_views = []
+    res.each do |view|
+      view_definition = get_view_definition(view['view_name'], schema_name)
+      dependent_views.push({:view_name => view['view_name'], :view_definition => view_definition})
+    end
+
+    dependent_views
   end
 
   # Monthly table partitions end in YYYYMM
